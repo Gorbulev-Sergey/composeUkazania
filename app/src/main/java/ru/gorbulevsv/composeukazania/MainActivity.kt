@@ -174,49 +174,47 @@ class MainActivity : ComponentActivity() {
                                 fontSize = fontSize * .9,
                                 fontFamily = FontFamily.SansSerif
                             )
-                            if (isInternetConnected) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = if (isNewStyle) {
-                                            DateTimeFormatter.ofPattern("E., d MMMM yyyy")
-                                                .format(date.value.plusDays((pagerState.currentPage - centralPage).toLong()))
-                                        } else {
-                                            DateTimeFormatter.ofPattern("E., ")
-                                                .format(date.value.plusDays((pagerState.currentPage - centralPage).toLong())) +
-                                                    DateTimeFormatter.ofPattern("d MMMM yyyy")
-                                                        .format(date.value.plusDays((pagerState.currentPage - centralPage).toLong() - 13))
-                                        },
-                                        fontSize = fontSize * .9,
-                                        color = colorLight,
-                                        fontFamily = FontFamily.Default,
-                                        modifier = Modifier.clickable(
-                                            onClick = {
-                                                coroutineScope.launch {
-                                                    pagerState.animateScrollToPage(centralPage)
-                                                }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = if (isNewStyle) {
+                                        DateTimeFormatter.ofPattern("E., d MMMM yyyy")
+                                            .format(date.value.plusDays((pagerState.currentPage - centralPage).toLong()))
+                                    } else {
+                                        DateTimeFormatter.ofPattern("E., ")
+                                            .format(date.value.plusDays((pagerState.currentPage - centralPage).toLong())) +
+                                                DateTimeFormatter.ofPattern("d MMMM yyyy")
+                                                    .format(date.value.plusDays((pagerState.currentPage - centralPage).toLong() - 13))
+                                    },
+                                    fontSize = fontSize * .9,
+                                    color = colorLight,
+                                    fontFamily = FontFamily.Default,
+                                    modifier = Modifier.clickable(
+                                        onClick = {
+                                            coroutineScope.launch {
+                                                pagerState.animateScrollToPage(centralPage)
                                             }
+                                        }
+                                    )
+                                )
+                                Text(
+                                    text = if (isNewStyle) "новый ст." else "старый ст.",
+                                    modifier = Modifier
+                                        .padding(start = 10.dp)
+                                        .background(
+                                            colorButton,
+                                            shape = RoundedCornerShape(borderRadius)
                                         )
-                                    )
-                                    Text(
-                                        text = if (isNewStyle) "новый ст." else "старый ст.",
-                                        modifier = Modifier
-                                            .padding(start = 10.dp)
-                                            .background(
-                                                colorButton,
-                                                shape = RoundedCornerShape(borderRadius)
-                                            )
-                                            .clickable(onClick = { isNewStyle = !isNewStyle })
-                                            .padding(horizontal = 10.dp, vertical = 4.dp),
-                                        color = colorButtonText,
-                                        textAlign = TextAlign.Center,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 15.sp
-                                    )
-                                }
+                                        .clickable(onClick = { isNewStyle = !isNewStyle })
+                                        .padding(horizontal = 10.dp, vertical = 4.dp),
+                                    color = colorButtonText,
+                                    textAlign = TextAlign.Center,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 15.sp
+                                )
                             }
                         }
                     },
@@ -305,20 +303,11 @@ class MainActivity : ComponentActivity() {
                                     state = pagerState,
                                     beyondViewportPageCount = 1
                                 ) { pageIndex ->
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .verticalScroll(rememberScrollState()),
-                                        verticalArrangement = Arrangement.Center,
-                                        horizontalAlignment = Alignment.CenterHorizontally
-                                    ) {
-                                        if (!isRefreshing) {
-                                            MyTextHtml(
-                                                date = date.value.plusDays((pageIndex - centralPage).toLong())
-                                            )
-                                        }
+                                    if (!isRefreshing) {
+                                        MyTextHtml(
+                                            date = date.value.plusDays((pageIndex - centralPage).toLong())
+                                        )
                                     }
-
                                 }
                             } else {
                                 Column(
@@ -334,16 +323,18 @@ class MainActivity : ComponentActivity() {
                                     )
                                 ) {
                                     Text(
-                                        "Интернет отсутствует".uppercase(),
+                                        "Интернет отсутствует!".uppercase(),
                                         modifier = Modifier.fillMaxWidth(),
                                         fontSize = fontSize,
                                         fontWeight = FontWeight.Bold,
-                                        textAlign = TextAlign.Center
+                                        textAlign = TextAlign.Center,
+                                        fontFamily = FontFamily.Serif
                                     )
                                     Text(
-                                        "Проверьте, пожалуйста, включен ли интернет на вашем устройстве",
+                                        "Проверьте, пожалуйста, включен ли интернет на вашем устройстве.",
                                         modifier = Modifier.fillMaxWidth(),
-                                        fontSize = fontSize, textAlign = TextAlign.Center
+                                        fontSize = fontSize, textAlign = TextAlign.Center,
+                                        fontFamily = FontFamily.Serif
                                     )
                                 }
                             }
