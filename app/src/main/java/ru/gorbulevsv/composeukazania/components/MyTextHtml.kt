@@ -88,7 +88,7 @@ fun MyTextHtml(
 
 suspend fun getHtml(date: LocalDate): String {
     var ukazania by mutableStateOf(Gson().toJson(Ukazania()))
-    var url = "https://api.patriarchia.ru/v1/events/${
+    var url = "http://api.patriarchia.ru/v1/events/${
         DateTimeFormatter.ofPattern("yyyy-MM-dd").format(date.minusDays(13))
     }"
     try {
