@@ -39,6 +39,8 @@ import ru.gorbulevsv.composeukazania.models.Ukazania
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+const val MESSAGE: String = "<b>ПОКА НИЧЕГО НЕТ</b><div>На данную дату указания отсутствуют, возможно они появятся позже!</div>"
+
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(DelicateCoroutinesApi::class)
 @Composable
@@ -47,10 +49,10 @@ fun MyTextHtml(
     fontSize: TextUnit = 20.sp,
     lineHeight: TextUnit = 27.sp
 ) {
-    var html = remember { mutableStateOf("") }
+    var html by remember { mutableStateOf("") }
 
     rememberCoroutineScope().launch {
-        html.value = getHtml(date)
+        html = getHtml(date)
     }
 
     Column(
@@ -58,10 +60,10 @@ fun MyTextHtml(
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = if (html == MESSAGE) Arrangement.Center else Arrangement.Top
     ) {
         HtmlText(
-            text = html.value,
+            text = if (html == MESSAGE) MESSAGE else html,
             modifier = Modifier
                 .padding(15.dp),
             fontSize = fontSize,
@@ -70,7 +72,7 @@ fun MyTextHtml(
                 lineHeight = lineHeight,
                 fontFamily = FontFamily.Serif,
                 color = if (isSystemInDarkTheme()) Color.White.copy(.9f) else Color.Black,
-                textAlign = TextAlign.Start
+                textAlign = if(html==MESSAGE) TextAlign.Center else TextAlign.Start
             ),
             linkClicked = { link ->
 
@@ -103,5 +105,5 @@ suspend fun getHtml(date: LocalDate): String {
         Ukazania::class.java
     ).content.replace("${DateTimeFormatter.ofPattern("d").format(date.minusDays(13))}. ", "")
 
-    return if (result.trim() != "") result else "<div>На данную дату указания отсутствуют, возможно они появятся позже!</div>"
+    return if (result.trim() == "") MESSAGE else result
 }

@@ -294,7 +294,7 @@ class MainActivity : ComponentActivity() {
                                         )
                                         .padding(horizontal = 20.dp, vertical = 50.dp),
                                     verticalArrangement = Arrangement.spacedBy(
-                                        10.dp,
+                                        5.dp,
                                         alignment = Alignment.CenterVertically
                                     )
                                 ) {
