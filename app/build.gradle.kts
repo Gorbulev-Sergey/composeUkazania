@@ -52,9 +52,13 @@ dependencies {
 
     implementation("androidx.compose.material3:material3:1.3.1")
 
-    val ktor_version = "3.1.0"
-    implementation("io.ktor:ktor-client-core:$ktor_version")
-    implementation("io.ktor:ktor-client-cio:$ktor_version")
+    val ktor_v = "3.1.0"
+    implementation("io.ktor:ktor-client-core:$ktor_v")
+    implementation("io.ktor:ktor-client-cio:$ktor_v")
+    implementation("io.ktor:ktor-client-json:$ktor_v")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktor_v")
+    implementation("io.ktor:ktor-client-serialization:$ktor_v")
+    implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.github.SignificoHealth:compose-html:1.0.3")
 
 

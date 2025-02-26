@@ -24,54 +24,31 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
-import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.request.get
-import io.ktor.client.statement.HttpResponse
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import kotlin.math.ceil
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import ru.gorbulevsv.composeukazania.components.BottomCalendar
 import ru.gorbulevsv.composeukazania.components.DatePickerModal
 import ru.gorbulevsv.composeukazania.components.MyButton
@@ -84,9 +61,10 @@ import ru.gorbulevsv.composeukazania.ui.theme.Color4
 import ru.gorbulevsv.composeukazania.ui.theme.ColorInfo
 import ru.gorbulevsv.composeukazania.ui.theme.ComposeUkazaniaTheme
 import java.text.SimpleDateFormat
-import java.time.LocalTime
-import java.time.ZoneOffset
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Date
+import kotlin.math.ceil
 
 class MainActivity : ComponentActivity() {
     var isInternetConnected by mutableStateOf(false)
@@ -106,8 +84,6 @@ class MainActivity : ComponentActivity() {
     val colorButtonText = Color22
     val colorDark = Color21
     val colorLight = Color22
-    val regex =
-        """<div class="main" id="main">[.\s\S]*</div>[.\s\S]*<div class="sidebar">""".toRegex()
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     @OptIn(ExperimentalMaterial3Api::class)
@@ -323,7 +299,7 @@ class MainActivity : ComponentActivity() {
                                     )
                                 ) {
                                     Text(
-                                        "Интернет отсутствует!".uppercase(),
+                                        "Интернет отсутствует".uppercase(),
                                         modifier = Modifier.fillMaxWidth(),
                                         fontSize = fontSize,
                                         fontWeight = FontWeight.Bold,
@@ -331,7 +307,7 @@ class MainActivity : ComponentActivity() {
                                         fontFamily = FontFamily.Serif
                                     )
                                     Text(
-                                        "Проверьте, пожалуйста, включен ли интернет на вашем устройстве.",
+                                        "Проверьте, пожалуйста, включен ли интернет на вашем устройстве!",
                                         modifier = Modifier.fillMaxWidth(),
                                         fontSize = fontSize, textAlign = TextAlign.Center,
                                         fontFamily = FontFamily.Serif
@@ -362,7 +338,6 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                     }
-
                 }
             }
         }
@@ -374,41 +349,4 @@ fun dateFromLong(time: Long): String {
     val date = Date(time)
     val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     return format.format(date)
-}
-
-fun getUrl(date: LocalDate): String {
-    return "http://www.patriarchia.ru/bu/${
-        DateTimeFormatter.ofPattern("yyyy-MM-dd").format(date)
-    }/print.html"
-}
-
-suspend fun getHtml(url: String): String {
-    var result = mutableStateOf("")
-    try {
-        val client = HttpClient(CIO)
-        val response: HttpResponse = client.get(url)
-        result.value = response.body()
-        client.close()
-    } catch (e: Exception) {
-    }
-    return result.value
-}
-
-suspend fun getClearHtml(date: LocalDate): String {
-    var url = "http://www.patriarchia.ru/bu/${
-        DateTimeFormatter.ofPattern("yyyy-MM-dd").format(date)
-    }/print.html"
-    val regex =
-        """<div class="main" id="main">[.\s\S]*</div>[.\s\S]*<div class="sidebar">""".toRegex()
-    var result = regex.find(getHtml(url))?.value.toString()
-        .replace("\n\r", "")
-        .replace("""<div class="main" id="main">""", "")
-        .replace("""</div><div class="sidebar">""", "")
-        .replace("Богослужебные указания за", "")
-        .replace(date.minusDays(13).dayOfMonth.toString() + ". ", "")
-        .replace(
-            DateTimeFormatter.ofPattern("d MMMM yyyy")
-                .format(date) + " года", ""
-        )
-    return result
 }
