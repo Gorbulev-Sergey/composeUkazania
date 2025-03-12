@@ -16,6 +16,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -30,7 +31,12 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -48,6 +54,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import kotlinx.coroutines.launch
 import ru.gorbulevsv.composeukazania.components.BottomCalendar
 import ru.gorbulevsv.composeukazania.components.DatePickerModal
@@ -130,11 +137,14 @@ class MainActivity : ComponentActivity() {
                 var pagerState = rememberPagerState(
                     pageCount = { pageCount }, initialPage = centralPage
                 )
+
+                val colorBackground = if (isSystemInDarkTheme()) colorDark else Color.White
+                val colorText = if (isSystemInDarkTheme()) Color.White else colorDark
                 Scaffold(
                     topBar = {
                         Column(
                             modifier = Modifier
-                                .background(colorTopBottomAppBar)
+                                .background(colorBackground)
                                 .padding(
                                     WindowInsets.systemBars
                                         .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
@@ -145,10 +155,10 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Text(
                                 "Богослужебные указания".uppercase(),
-                                color = Color4,
+                                color = colorText,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = fontSize * .9,
-                                fontFamily = FontFamily.SansSerif
+                                fontSize = fontSize,
+                                fontFamily = FontFamily.Serif
                             )
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -157,7 +167,7 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 Text(
                                     text = if (isNewStyle) {
-                                        DateTimeFormatter.ofPattern("E., d MMMM yyyy")
+                                        DateTimeFormatter.ofPattern("на E., d MMMM yyyy")
                                             .format(date.value.plusDays((pagerState.currentPage - centralPage).toLong()))
                                     } else {
                                         DateTimeFormatter.ofPattern("E., ")
@@ -165,9 +175,9 @@ class MainActivity : ComponentActivity() {
                                                 DateTimeFormatter.ofPattern("d MMMM yyyy")
                                                     .format(date.value.plusDays((pagerState.currentPage - centralPage).toLong() - 13))
                                     },
-                                    fontSize = fontSize * .9,
-                                    color = colorLight,
-                                    fontFamily = FontFamily.Default,
+                                    fontSize = fontSize,
+                                    color = colorText,
+                                    fontFamily = FontFamily.Serif,
                                     modifier = Modifier.clickable(
                                         onClick = {
                                             coroutineScope.launch {
@@ -181,12 +191,12 @@ class MainActivity : ComponentActivity() {
                                     modifier = Modifier
                                         .padding(start = 10.dp)
                                         .background(
-                                            colorButton,
+                                            colorTopBottomAppBar,
                                             shape = RoundedCornerShape(borderRadius)
                                         )
                                         .clickable(onClick = { isNewStyle = !isNewStyle })
                                         .padding(horizontal = 10.dp, vertical = 4.dp),
-                                    color = colorButtonText,
+                                    color = colorBackground,
                                     textAlign = TextAlign.Center,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 15.sp
@@ -195,7 +205,8 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     bottomBar = {
-                        if (isInternetConnected) {
+                        val hide = true
+                        if (isInternetConnected && !hide) {
                             Row(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically,
@@ -243,6 +254,18 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             }
+                        }
+                    },
+                    floatingActionButton = {
+                        FloatingActionButton(
+                            containerColor = colorTopBottomAppBar,
+                            contentColor = colorBackground,
+                            onClick = { isDateDialogShow = true },
+                        ) {
+                            Icon(
+                                Icons.Default.DateRange,
+                                contentDescription = "Floating action button."
+                            )
                         }
                     }
                 ) {

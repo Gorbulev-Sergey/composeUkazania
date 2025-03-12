@@ -39,7 +39,8 @@ import ru.gorbulevsv.composeukazania.models.Ukazania
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-const val MESSAGE: String = "<b>ПОКА НИЧЕГО НЕТ</b><div>На данную дату указания отсутствуют, возможно они появятся позже!</div>"
+const val MESSAGE: String =
+    "<b>ПОКА НИЧЕГО НЕТ</b><div>На данную дату указания отсутствуют, возможно они появятся позже!</div>"
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(DelicateCoroutinesApi::class)
@@ -50,15 +51,17 @@ fun MyTextHtml(
     lineHeight: TextUnit = 27.sp
 ) {
     var html by remember { mutableStateOf("") }
+    var coroutineScope = rememberCoroutineScope()
+    var scrollableState = rememberScrollState()
 
-    rememberCoroutineScope().launch {
+    coroutineScope.launch {
         html = getHtml(date)
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
+            .verticalScroll(scrollableState),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = if (html == MESSAGE) Arrangement.Center else Arrangement.Top
     ) {
@@ -72,13 +75,15 @@ fun MyTextHtml(
                 lineHeight = lineHeight,
                 fontFamily = FontFamily.Serif,
                 color = if (isSystemInDarkTheme()) Color.White.copy(.9f) else Color.Black,
-                textAlign = if(html==MESSAGE) TextAlign.Center else TextAlign.Start
+                textAlign = if (html == MESSAGE) TextAlign.Center else TextAlign.Start
             ),
             linkClicked = { link ->
 
             },
             URLSpanStyle = SpanStyle(
-                color = if (isSystemInDarkTheme()) Color.White.copy(.75f) else Color.Black.copy(.75f),
+                color = if (isSystemInDarkTheme()) Color.White.copy(.75f) else Color.Black.copy(
+                    .75f
+                ),
                 fontSize = fontSize * .7,
                 fontWeight = FontWeight.Bold
             )
