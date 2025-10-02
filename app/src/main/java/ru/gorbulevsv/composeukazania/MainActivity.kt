@@ -139,8 +139,8 @@ class MainActivity : ComponentActivity() {
                pageCount = { pageCount }, initialPage = centralPage
             )
 
-            val colorBackground = if (isSystemInDarkTheme()) colorDark else Color.White
-            val colorText = if (isSystemInDarkTheme()) Color.White else colorDark
+            val colorBackground = if (isSystemInDarkTheme()) Color("#b0a69a".toColorInt()) else Color("#E6D9C9".toColorInt())
+            val colorText = if (isSystemInDarkTheme()) Color("#252525".toColorInt()) else MaterialTheme.colorScheme.onBackground
             Scaffold(topBar = {
                CenterAlignedTopAppBar(
                   navigationIcon = {
@@ -199,10 +199,10 @@ class MainActivity : ComponentActivity() {
                      Icon(Icons.Default.Settings, "")
                   }
                }, colors = TopAppBarDefaults.topAppBarColors(
-                  containerColor = Color("#E6D9C9".toColorInt()),
-                  titleContentColor = MaterialTheme.colorScheme.onBackground,
-                  navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
-                  actionIconContentColor = MaterialTheme.colorScheme.onBackground
+                  containerColor = colorBackground,
+                  titleContentColor = colorText,
+                  navigationIconContentColor = colorText,
+                  actionIconContentColor = colorText
                )
                )
             }, bottomBar = {
@@ -259,7 +259,7 @@ class MainActivity : ComponentActivity() {
                   elevation = FloatingActionButtonDefaults.elevation(
                      defaultElevation = 0.dp, pressedElevation = 0.dp
                   ),
-                  containerColor = Color("#E6D9C9".toColorInt()),
+                  containerColor = colorBackground,
                   contentColor = MaterialTheme.colorScheme.onBackground,
                   modifier = Modifier.padding(bottom = 8.dp)
                ) {
@@ -267,7 +267,7 @@ class MainActivity : ComponentActivity() {
                      horizontalAlignment = Alignment.CenterHorizontally,
                      modifier = Modifier.padding(8.dp, 6.dp)
                   ) {
-                     Icon(Icons.Default.DateRange, "")
+                     Icon(Icons.Default.DateRange, contentDescription = "",tint = colorText)
                      Text(
                         text = if (isNewStyle) {
                            DateTimeFormatter.ofPattern("d MMMM\nн.ст.").format(
@@ -281,7 +281,8 @@ class MainActivity : ComponentActivity() {
                            ).format(date.value.plusDays((pagerState.currentPage - centralPage).toLong() - 13))
                         },
                         textAlign = TextAlign.Center,
-                        lineHeight = 14.sp
+                        lineHeight = 14.sp,
+                        color = colorText
                      )
                   }
                }

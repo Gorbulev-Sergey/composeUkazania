@@ -1,6 +1,7 @@
 package ru.gorbulevsv.composeukazania.components
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
 import com.google.gson.Gson
 import com.ireward.htmlcompose.HtmlText
 import io.ktor.client.HttpClient
@@ -57,20 +59,27 @@ fun MyTextHtml(
 
    Column(
       modifier = Modifier
+         .background(if (isSystemInDarkTheme()) Color("#252525".toColorInt()) else Color.White)
          .fillMaxSize()
-         .verticalScroll(scrollableState),
+         .verticalScroll(
+            scrollableState
+         ),
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = if (html == MESSAGE) Arrangement.Center else Arrangement.Top
    ) {
       HtmlText(
          text = if (html == MESSAGE) MESSAGE else html,
-         modifier = Modifier.padding(15.dp,13.dp),
+         modifier = Modifier
+            .background(if (isSystemInDarkTheme()) Color("#252525".toColorInt()) else Color.White)
+            .padding(
+               15.dp, 13.dp
+            ),
          fontSize = fontSize,
          style = TextStyle(
             fontSize = fontSize,
             lineHeight = lineHeight,
             fontFamily = FontFamily.Serif,
-            color = if (isSystemInDarkTheme()) Color.White.copy(.9f) else Color.Black,
+            color = if (isSystemInDarkTheme()) Color("#e4e0dc".toColorInt()) else Color.Black,
             textAlign = if (html == MESSAGE) TextAlign.Center else TextAlign.Start
          ),
          linkClicked = { link ->
