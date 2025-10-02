@@ -201,7 +201,6 @@ class MainActivity : ComponentActivity() {
                   actionIconContentColor = MaterialTheme.colorScheme.onBackground
                )
                )
-
             }, bottomBar = {
                val hide = true
                if (isInternetConnected && !hide) {
