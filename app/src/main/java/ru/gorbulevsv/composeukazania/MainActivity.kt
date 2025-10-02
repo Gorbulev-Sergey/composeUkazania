@@ -37,6 +37,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -250,15 +251,28 @@ class MainActivity : ComponentActivity() {
                }
             }, floatingActionButton = {
                FloatingActionButton(
-                  containerColor = colorTopBottomAppBar,
-                  contentColor = colorBackground,
                   onClick = { isDateDialogShow = true },
+                  shape = MaterialTheme.shapes.small,
+                  elevation = FloatingActionButtonDefaults.elevation(
+                     defaultElevation = 0.dp, pressedElevation = 0.dp
+                  ),
+                  containerColor = Color("#E6D9C9".toColorInt()),
+                  contentColor = MaterialTheme.colorScheme.onBackground
                ) {
-                  Icon(
-                     Icons.Default.DateRange, contentDescription = "Выбери дату"
-                  )
+                  Column(
+                     horizontalAlignment = Alignment.CenterHorizontally,
+                     modifier = Modifier.padding(6.dp)
+                  ) {
+                     Icon(Icons.Default.DateRange, "")
+                     Text(
+                        text = DateTimeFormatter.ofPattern("d MMMM").format(
+                           date.value
+                        )
+                     )
+                  }
                }
             }) {
+
                Column(
                   modifier = Modifier
                      .fillMaxSize()
