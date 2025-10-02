@@ -33,11 +33,17 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -54,6 +60,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
 import kotlinx.coroutines.launch
 import ru.gorbulevsv.composeukazania.components.BottomCalendar
 import ru.gorbulevsv.composeukazania.components.DatePickerModal
@@ -127,77 +134,73 @@ class MainActivity : ComponentActivity() {
             var date = mutableStateOf(LocalDate.now())
             val pullToRefreshState = rememberPullToRefreshState()
             val coroutineScope = rememberCoroutineScope()
-            var pagerState = rememberPagerState(
+            val pagerState = rememberPagerState(
                pageCount = { pageCount }, initialPage = centralPage
             )
 
             val colorBackground = if (isSystemInDarkTheme()) colorDark else Color.White
             val colorText = if (isSystemInDarkTheme()) Color.White else colorDark
             Scaffold(topBar = {
-               Column(
-                  modifier = Modifier
-                     .background(colorBackground)
-                     .padding(
-                        WindowInsets.systemBars.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top).asPaddingValues()
+               CenterAlignedTopAppBar(
+                  navigationIcon = {
+                  IconButton(
+                     onClick = { isNewStyle = !isNewStyle },
+                     modifier = Modifier.padding(start = 4.dp),
+                     colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = Color("#D6C1A6".toColorInt())
                      )
-                     .padding(horizontal = padding, vertical = 8.dp)
-                     .fillMaxWidth(),
-               ) {
-                  Text(
-                     "Богослужебные указания".uppercase(),
-                     color = colorText,
-                     fontWeight = FontWeight.Bold,
-                     fontSize = fontSize,
-                     fontFamily = FontFamily.Serif
-                  )
-                  Row(
-                     modifier = Modifier.fillMaxWidth(),
-                     verticalAlignment = Alignment.CenterVertically
                   ) {
                      Text(
-                        text = if (isNewStyle) {
-                           DateTimeFormatter.ofPattern("E., d MMMM yyyy").format(
-                              date.value.plusDays(
-                                 (pagerState.currentPage - centralPage).toLong()
+                        text = if (isNewStyle) "н.\nст." else "ст.\nст.",
+                        style = MaterialTheme.typography.labelMedium,
+                        textAlign = TextAlign.Center
+                     )
+                  }
+               }, title = {
+                  Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                     Text(
+                        "Богослужебные указания",
+                        style = MaterialTheme.typography.titleLarge
+                     )
+                     Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                           text = if (isNewStyle) {
+                              DateTimeFormatter.ofPattern("E., d MMMM yyyy").format(
+                                 date.value.plusDays(
+                                    (pagerState.currentPage - centralPage).toLong()
+                                 )
                               )
-                           )
-                        } else {
-                           DateTimeFormatter.ofPattern("E., ").format(date.value.plusDays((pagerState.currentPage - centralPage).toLong())) + DateTimeFormatter.ofPattern(
-                              "d MMMM yyyy"
-                           ).format(date.value.plusDays((pagerState.currentPage - centralPage).toLong() - 13))
-                        },
-                        fontSize = 18.sp,
-                        color = colorText,
-                        fontFamily = FontFamily.Serif,
-                        modifier = Modifier
-                           .clickable(
+                           } else {
+                              DateTimeFormatter.ofPattern("E., ").format(
+                                 date.value.plusDays(
+                                    (pagerState.currentPage - centralPage).toLong()
+                                 )
+                              ) + DateTimeFormatter.ofPattern(
+                                 "d MMMM yyyy"
+                              ).format(date.value.plusDays((pagerState.currentPage - centralPage).toLong() - 13))
+                           },
+                           style = MaterialTheme.typography.bodyLarge,
+                           modifier = Modifier.clickable(
                               onClick = {
                                  coroutineScope.launch {
                                     pagerState.animateScrollToPage(centralPage)
                                  }
                               })
-                           .weight(1f),
-                        softWrap = false
-                     )
-                     Text(
-                        text = if (isNewStyle) "новый ст." else "старый ст.",
-                        modifier = Modifier
-                           .padding(start = 10.dp)
-                           .background(
-                              colorTopBottomAppBar, shape = RoundedCornerShape(borderRadius)
-                           )
-                           .clickable(onClick = { isNewStyle = !isNewStyle })
-                           .padding(
-                              horizontal = 10.dp, vertical = 4.dp
-                           ),
-                        //.wrapContentWidth(),
-                        color = colorBackground,
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp
-                     )
+                        )
+                     }
                   }
-               }
+               }, actions = {
+                  IconButton(onClick = {}) {
+                     Icon(Icons.Default.Settings, "")
+                  }
+               }, colors = TopAppBarDefaults.topAppBarColors(
+                  containerColor = Color("#E6D9C9".toColorInt()),
+                  titleContentColor = MaterialTheme.colorScheme.onBackground,
+                  navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
+                  actionIconContentColor = MaterialTheme.colorScheme.onBackground
+               )
+               )
+
             }, bottomBar = {
                val hide = true
                if (isInternetConnected && !hide) {
