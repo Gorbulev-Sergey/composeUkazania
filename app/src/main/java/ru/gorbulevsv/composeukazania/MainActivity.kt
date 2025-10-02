@@ -166,7 +166,7 @@ class MainActivity : ComponentActivity() {
                      Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                            text = if (isNewStyle) {
-                              DateTimeFormatter.ofPattern("E., d MMMM yyyy").format(
+                              DateTimeFormatter.ofPattern("E., d MMMM yyyy н.ст.").format(
                                  date.value.plusDays(
                                     (pagerState.currentPage - centralPage).toLong()
                                  )
@@ -177,7 +177,7 @@ class MainActivity : ComponentActivity() {
                                     (pagerState.currentPage - centralPage).toLong()
                                  )
                               ) + DateTimeFormatter.ofPattern(
-                                 "d MMMM yyyy"
+                                 "d MMMM yyyy ст.ст."
                               ).format(date.value.plusDays((pagerState.currentPage - centralPage).toLong() - 13))
                            },
                            style = MaterialTheme.typography.bodyLarge,
@@ -257,17 +257,28 @@ class MainActivity : ComponentActivity() {
                      defaultElevation = 0.dp, pressedElevation = 0.dp
                   ),
                   containerColor = Color("#E6D9C9".toColorInt()),
-                  contentColor = MaterialTheme.colorScheme.onBackground
+                  contentColor = MaterialTheme.colorScheme.onBackground,
+                  modifier = Modifier.padding(bottom = 8.dp)
                ) {
                   Column(
                      horizontalAlignment = Alignment.CenterHorizontally,
-                     modifier = Modifier.padding(6.dp)
+                     modifier = Modifier.padding(8.dp, 6.dp)
                   ) {
                      Icon(Icons.Default.DateRange, "")
                      Text(
-                        text = DateTimeFormatter.ofPattern("d MMMM").format(
-                           date.value
-                        )
+                        text = if (isNewStyle) {
+                           DateTimeFormatter.ofPattern("d MMMM\nн.ст.").format(
+                              date.value.plusDays(
+                                 (pagerState.currentPage - centralPage).toLong()
+                              )
+                           )
+                        } else {
+                           DateTimeFormatter.ofPattern(
+                              "d MMMM\nст.ст."
+                           ).format(date.value.plusDays((pagerState.currentPage - centralPage).toLong() - 13))
+                        },
+                        textAlign = TextAlign.Center,
+                        lineHeight = 14.sp
                      )
                   }
                }
