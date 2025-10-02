@@ -16,7 +16,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -33,7 +32,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -52,9 +50,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import kotlinx.coroutines.launch
 import ru.gorbulevsv.composeukazania.components.BottomCalendar
 import ru.gorbulevsv.composeukazania.components.DatePickerModal
@@ -64,7 +62,6 @@ import ru.gorbulevsv.composeukazania.ui.theme.Color21
 import ru.gorbulevsv.composeukazania.ui.theme.Color22
 import ru.gorbulevsv.composeukazania.ui.theme.Color33
 import ru.gorbulevsv.composeukazania.ui.theme.Color36
-import ru.gorbulevsv.composeukazania.ui.theme.Color4
 import ru.gorbulevsv.composeukazania.ui.theme.ColorInfo
 import ru.gorbulevsv.composeukazania.ui.theme.ComposeUkazaniaTheme
 import java.text.SimpleDateFormat
@@ -184,7 +181,9 @@ class MainActivity : ComponentActivity() {
                                                 pagerState.animateScrollToPage(centralPage)
                                             }
                                         }
-                                    )
+                                    ),
+                                    softWrap = true,
+                                    overflow = TextOverflow.Visible
                                 )
                                 Text(
                                     text = if (isNewStyle) "новый ст." else "старый ст.",
@@ -199,7 +198,8 @@ class MainActivity : ComponentActivity() {
                                     color = colorBackground,
                                     textAlign = TextAlign.Center,
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 15.sp
+                                    fontSize = 15.sp,
+                                    softWrap = false
                                 )
                             }
                         }
@@ -264,7 +264,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Icon(
                                 Icons.Default.DateRange,
-                                contentDescription = "Floating action button."
+                                contentDescription = "Выбери дату"
                             )
                         }
                     }

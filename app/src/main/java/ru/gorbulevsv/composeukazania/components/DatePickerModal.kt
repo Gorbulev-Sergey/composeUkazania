@@ -23,8 +23,7 @@ fun DatePickerModal(
 ) {
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = date.toEpochSecond(
-            LocalTime.parse("00:00:00"),
-            ZoneOffset.UTC
+            LocalTime.parse("00:00:00"), ZoneOffset.UTC
         ) * 1000
     )
     DatePickerDialog(
