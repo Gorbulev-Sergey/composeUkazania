@@ -160,11 +160,15 @@ class MainActivity : ComponentActivity() {
                }, title = {
                   Column(horizontalAlignment = Alignment.CenterHorizontally) {
                      Text(
-                        "Богослужебные указания",
+                        text = "Богослужебные указания",
+                        textAlign = TextAlign.Center,
+                        lineHeight = 20.sp,
                         style = MaterialTheme.typography.titleLarge
                      )
                      Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
+                           textAlign = TextAlign.Center,
+                           lineHeight = 14.sp,
                            text = if (isNewStyle) {
                               DateTimeFormatter.ofPattern("E., d MMMM yyyy н.ст.").format(
                                  date.value.plusDays(

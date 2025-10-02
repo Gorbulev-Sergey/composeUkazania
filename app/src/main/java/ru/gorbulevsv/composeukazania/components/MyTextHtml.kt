@@ -45,7 +45,7 @@ const val MESSAGE: String = "<b>ПОКА НИЧЕГО НЕТ</b><div>На дан
 @OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun MyTextHtml(
-   date: LocalDate, fontSize: TextUnit = 20.sp, lineHeight: TextUnit = 27.sp) {
+   date: LocalDate, fontSize: TextUnit = 19.sp, lineHeight: TextUnit = 26.sp) {
    var html by remember { mutableStateOf("") }
    val coroutineScope = rememberCoroutineScope()
    val scrollableState = rememberScrollState()
@@ -64,7 +64,7 @@ fun MyTextHtml(
    ) {
       HtmlText(
          text = if (html == MESSAGE) MESSAGE else html,
-         modifier = Modifier.padding(15.dp),
+         modifier = Modifier.padding(15.dp,13.dp),
          fontSize = fontSize,
          style = TextStyle(
             fontSize = fontSize,
