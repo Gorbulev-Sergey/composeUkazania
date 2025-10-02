@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,7 +48,9 @@ const val MESSAGE: String = "<b>ПОКА НИЧЕГО НЕТ</b><div>На дан
 @OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun MyTextHtml(
-   date: LocalDate, fontSize: TextUnit = 19.sp, lineHeight: TextUnit = 26.sp) {
+   date: LocalDate,
+   fontSize: MutableState<Int> = mutableStateOf(19),
+   lineHeight: MutableState<Int> = mutableStateOf(26)) {
    var html by remember { mutableStateOf("") }
    val coroutineScope = rememberCoroutineScope()
    val scrollableState = rememberScrollState()
@@ -74,10 +77,10 @@ fun MyTextHtml(
             .padding(
                15.dp, 13.dp
             ),
-         fontSize = fontSize,
+         fontSize = fontSize.value.sp,
          style = TextStyle(
-            fontSize = fontSize,
-            lineHeight = lineHeight,
+            fontSize = fontSize.value.sp,
+            lineHeight = lineHeight.value.sp,
             fontFamily = FontFamily.Serif,
             color = if (isSystemInDarkTheme()) Color("#e4e0dc".toColorInt()) else Color.Black,
             textAlign = if (html == MESSAGE) TextAlign.Center else TextAlign.Start
@@ -88,7 +91,7 @@ fun MyTextHtml(
          URLSpanStyle = SpanStyle(
             color = if (isSystemInDarkTheme()) Color.White.copy(.75f) else Color.Black.copy(
                .75f
-            ), fontSize = fontSize * .7, fontWeight = FontWeight.Bold
+            ), fontSize = (fontSize.value * .7).sp, fontWeight = FontWeight.Bold
          )
       )
    }

@@ -27,13 +27,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -55,16 +56,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import kotlinx.coroutines.launch
+import ru.gorbulevsv.composeukazania.components.Badge
 import ru.gorbulevsv.composeukazania.components.BottomCalendar
+import ru.gorbulevsv.composeukazania.components.BottomSheet
 import ru.gorbulevsv.composeukazania.components.DatePickerModal
+import ru.gorbulevsv.composeukazania.components.FieldWithMinusPlus
 import ru.gorbulevsv.composeukazania.components.MyButton
 import ru.gorbulevsv.composeukazania.components.MyTextHtml
 import ru.gorbulevsv.composeukazania.ui.theme.Color21
@@ -84,13 +89,16 @@ class MainActivity : ComponentActivity() {
    var isRefreshing by mutableStateOf(true)
    var isNewStyle by mutableStateOf(true)
    var isDateDialogShow by mutableStateOf(false)
+   var isSettingsShow = mutableStateOf(false)
+   var fontSize = mutableStateOf(19)
+   var lineHeight = mutableStateOf(26)
+
 
    val pageCount = Int.MAX_VALUE - 1
    val centralPage = ceil((pageCount / 2).toDouble()).toInt()
 
    val borderRadius = 5.dp
    val padding = 14.dp
-   val fontSize = 20.sp
 
    val colorTopBottomAppBar = Color33
    val colorButton = Color36.copy(.4f)
@@ -139,7 +147,9 @@ class MainActivity : ComponentActivity() {
                pageCount = { pageCount }, initialPage = centralPage
             )
 
-            val colorBackground = if (isSystemInDarkTheme()) Color("#b0a69a".toColorInt()) else Color("#E6D9C9".toColorInt())
+            val colorBackground = if (isSystemInDarkTheme()) Color("#b0a69a".toColorInt()) else Color(
+               "#E6D9C9".toColorInt()
+            )
             val colorText = if (isSystemInDarkTheme()) Color("#252525".toColorInt()) else MaterialTheme.colorScheme.onBackground
             Scaffold(topBar = {
                CenterAlignedTopAppBar(
@@ -195,7 +205,7 @@ class MainActivity : ComponentActivity() {
                      }
                   }
                }, actions = {
-                  IconButton(onClick = {}) {
+                  IconButton(onClick = { isSettingsShow.value = true }) {
                      Icon(Icons.Default.Settings, "")
                   }
                }, colors = TopAppBarDefaults.topAppBarColors(
@@ -233,7 +243,7 @@ class MainActivity : ComponentActivity() {
                      BottomCalendar(
                         date = date.value.plusDays((pagerState.currentPage - centralPage).toLong()),
                         onClick = { isDateDialogShow = true },
-                        fontSize = fontSize * .8,
+                        fontSize = (fontSize.value * .8).sp,
                         color = colorLight,
                         background = colorButton,
                         borderRadius = borderRadius,
@@ -267,7 +277,7 @@ class MainActivity : ComponentActivity() {
                      horizontalAlignment = Alignment.CenterHorizontally,
                      modifier = Modifier.padding(8.dp, 6.dp)
                   ) {
-                     Icon(Icons.Default.DateRange, contentDescription = "",tint = colorText)
+                     Icon(Icons.Default.DateRange, contentDescription = "", tint = colorText)
                      Text(
                         text = if (isNewStyle) {
                            DateTimeFormatter.ofPattern("d MMMM\nн.ст.").format(
@@ -279,10 +289,7 @@ class MainActivity : ComponentActivity() {
                            DateTimeFormatter.ofPattern(
                               "d MMMM\nст.ст."
                            ).format(date.value.plusDays((pagerState.currentPage - centralPage).toLong() - 13))
-                        },
-                        textAlign = TextAlign.Center,
-                        lineHeight = 14.sp,
-                        color = colorText
+                        }, textAlign = TextAlign.Center, lineHeight = 14.sp, color = colorText
                      )
                   }
                }
@@ -321,7 +328,9 @@ class MainActivity : ComponentActivity() {
                         ) { pageIndex ->
                            if (!isRefreshing) {
                               MyTextHtml(
-                                 date = date.value.plusDays((pageIndex - centralPage).toLong())
+                                 date = date.value.plusDays((pageIndex - centralPage).toLong()),
+                                 fontSize = fontSize,
+                                 lineHeight = lineHeight
                               )
                            }
                         }
@@ -340,7 +349,7 @@ class MainActivity : ComponentActivity() {
                            Text(
                               "Интернет отсутствует".uppercase(),
                               modifier = Modifier.fillMaxWidth(),
-                              fontSize = fontSize,
+                              fontSize = fontSize.value.sp,
                               fontWeight = FontWeight.Bold,
                               textAlign = TextAlign.Center,
                               fontFamily = FontFamily.Serif
@@ -348,7 +357,7 @@ class MainActivity : ComponentActivity() {
                            Text(
                               "Проверьте, пожалуйста, включен ли интернет на вашем устройстве!",
                               modifier = Modifier.fillMaxWidth(),
-                              fontSize = fontSize,
+                              fontSize = fontSize.value.sp,
                               textAlign = TextAlign.Center,
                               fontFamily = FontFamily.Serif
                            )
@@ -359,24 +368,79 @@ class MainActivity : ComponentActivity() {
                         isRefreshing = false
                      }
                   }
+               }
 
-                  if (isDateDialogShow) {
-                     DatePickerModal(
-                        onDateSelected = { v ->
-                        if (v != null) {
-                           coroutineScope.launch {
-                              val d = LocalDate.parse(
-                                 dateFromLong(v.toLong()),
-                                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-                              )
-                              pagerState.animateScrollToPage((centralPage + d.toEpochDay() - date.value.toEpochDay()).toInt())
-                           }
+               if (isDateDialogShow) {
+                  DatePickerModal(
+                     onDateSelected = { v ->
+                     if (v != null) {
+                        coroutineScope.launch {
+                           val d = LocalDate.parse(
+                              dateFromLong(v.toLong()),
+                              DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                           )
+                           pagerState.animateScrollToPage((centralPage + d.toEpochDay() - date.value.toEpochDay()).toInt())
                         }
-                     },
-                                     onDismiss = { isDateDialogShow = false },
-                                     date = date.value.plusDays((pagerState.currentPage - centralPage).toLong())
-                     )
+                     }
+                  },
+                                  onDismiss = { isDateDialogShow = false },
+                                  date = date.value.plusDays((pagerState.currentPage - centralPage).toLong())
+                  )
+               }
+
+               BottomSheet("Настройки:", isSettingsShow, bottomPanel = {
+                  Row(
+                     modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 38.dp),
+                     horizontalArrangement = Arrangement.Center
+                  ) {
+                     val uriHandler = LocalUriHandler.current
+                     Button(
+                        onClick = {
+                           uriHandler.openUri("https://tips.tips/000459880")
+                        }, colors = ButtonDefaults.buttonColors(
+                           containerColor = colorBackground, contentColor = colorText
+                        ), shape = RoundedCornerShape(5.dp)
+                     ) {
+                        Text(
+                           "Поддержать разработчика",
+                           fontFamily = FontFamily(Font(R.font.great_vibes)),
+                           fontSize = 18.sp
+                        )
+                     }
                   }
+               }) {
+                  FieldWithMinusPlus(
+                     title = "Размер шрифта",
+                     badge = {
+                        Badge(
+                           text = fontSize.value.toString() + "px",
+                           background = colorBackground,
+                           color = colorText
+                        )
+                     },
+                     onClick = {},
+                     onMinus = { fontSize.value -= 1 },
+                     onPlus = { fontSize.value += 1 },
+                     background = colorBackground,
+                     color = MaterialTheme.colorScheme.onPrimaryContainer,
+                  )
+                  FieldWithMinusPlus(
+                     title = "Интервал строк",
+                     badge = {
+                        Badge(
+                           text = lineHeight.value.toString() + "px",
+                           background = colorBackground,
+                           color = colorText
+                        )
+                     },
+                     onClick = {},
+                     onMinus = { lineHeight.value -= 1 },
+                     onPlus = { lineHeight.value += 1 },
+                     background = colorBackground,
+                     color = MaterialTheme.colorScheme.onPrimaryContainer,
+                  )
                }
             }
          }
