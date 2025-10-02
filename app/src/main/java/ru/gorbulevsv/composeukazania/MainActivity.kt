@@ -16,14 +16,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
@@ -69,7 +72,9 @@ import ru.gorbulevsv.composeukazania.components.Badge
 import ru.gorbulevsv.composeukazania.components.BottomCalendar
 import ru.gorbulevsv.composeukazania.components.BottomSheet
 import ru.gorbulevsv.composeukazania.components.DatePickerModal
+import ru.gorbulevsv.composeukazania.components.Dialog
 import ru.gorbulevsv.composeukazania.components.FieldWithMinusPlus
+import ru.gorbulevsv.composeukazania.components.FieldWithNext
 import ru.gorbulevsv.composeukazania.components.MyButton
 import ru.gorbulevsv.composeukazania.components.MyTextHtml
 import ru.gorbulevsv.composeukazania.ui.theme.Color21
@@ -78,6 +83,7 @@ import ru.gorbulevsv.composeukazania.ui.theme.Color33
 import ru.gorbulevsv.composeukazania.ui.theme.Color36
 import ru.gorbulevsv.composeukazania.ui.theme.ColorInfo
 import ru.gorbulevsv.composeukazania.ui.theme.ComposeUkazaniaTheme
+import ru.gorbulevsv.composeukazania.ui.theme.fonts
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -90,8 +96,12 @@ class MainActivity : ComponentActivity() {
    var isNewStyle by mutableStateOf(true)
    var isDateDialogShow by mutableStateOf(false)
    var isSettingsShow = mutableStateOf(false)
-   var fontSize = mutableStateOf(19)
-   var lineHeight = mutableStateOf(26)
+   var isFontDialogShow = mutableStateOf(false)
+
+
+   var font = mutableStateOf(fonts[8])
+   var fontSize = mutableStateOf(20)
+   var lineHeight = mutableStateOf(25)
 
 
    val pageCount = Int.MAX_VALUE - 1
@@ -293,7 +303,7 @@ class MainActivity : ComponentActivity() {
                      )
                   }
                }
-            }) {
+            }) { it ->
 
                Column(
                   modifier = Modifier
@@ -329,6 +339,7 @@ class MainActivity : ComponentActivity() {
                            if (!isRefreshing) {
                               MyTextHtml(
                                  date = date.value.plusDays((pageIndex - centralPage).toLong()),
+                                 fontFamily = font,
                                  fontSize = fontSize,
                                  lineHeight = lineHeight
                               )
@@ -388,7 +399,91 @@ class MainActivity : ComponentActivity() {
                   )
                }
 
-               BottomSheet("Настройки:", isSettingsShow, bottomPanel = {
+               BottomSheet("Настройки:", isSettingsShow) {
+
+                     FieldWithNext(
+                        title = "Шрифт",
+                        badge = {
+                           Badge(
+                              font.value.title,
+                              background = colorBackground,
+                              color = colorText,
+                              fontFamily = FontFamily(Font(font.value.r, FontWeight.Normal))
+                           )
+                        },
+                        onClick = { isFontDialogShow.value = true },
+                        dialog = {
+                           Dialog("Выбор шрифта", isFontDialogShow) {
+                              fonts.forEach {
+                                 Row(
+                                    modifier = Modifier
+                                       .fillMaxWidth()
+                                       .clickable(
+                                          onClick = {
+                                             font.value = fonts.find { f -> f.title == it.title }!!
+                                             isFontDialogShow.value = false
+                                          })
+                                       .background(
+                                          if (it.title == font.value.title) MaterialTheme.colorScheme.onSurface.copy(
+                                             .2f
+                                          ) else Color.Transparent
+                                       )
+                                       .padding(
+                                          18.dp, 9.dp
+                                       )
+                                 ) {
+                                    Text(
+                                       text = it.title,
+                                       fontFamily = FontFamily(
+                                          Font(
+                                             it.r, FontWeight.Normal
+                                          )
+                                       ),
+                                       color = if (font.value == it) colorText else MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
+                                 }
+                              }
+                           }
+                        },
+                        onNext = {
+                           val selectedIndex = fonts.indexOf(font.value)
+                           if (selectedIndex == fonts.lastIndex) font.value = fonts[0]
+                           else font.value = fonts[selectedIndex + 1]
+                        },
+                        background = colorBackground,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                     )
+                     FieldWithMinusPlus(
+                        title = "Размер шрифта",
+                        badge = {
+                           Badge(
+                              text = fontSize.value.toString() + "px",
+                              background = colorBackground,
+                              color = colorText
+                           )
+                        },
+                        onClick = {},
+                        onMinus = { fontSize.value -= 1 },
+                        onPlus = { fontSize.value += 1 },
+                        background = colorBackground,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                     )
+                     FieldWithMinusPlus(
+                        title = "Интервал строк",
+                        badge = {
+                           Badge(
+                              text = lineHeight.value.toString() + "px",
+                              background = colorBackground,
+                              color = colorText
+                           )
+                        },
+                        onClick = {},
+                        onMinus = { lineHeight.value -= 1 },
+                        onPlus = { lineHeight.value += 1 },
+                        background = colorBackground,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                     )
+
                   Row(
                      modifier = Modifier
                         .fillMaxWidth()
@@ -410,37 +505,6 @@ class MainActivity : ComponentActivity() {
                         )
                      }
                   }
-               }) {
-                  FieldWithMinusPlus(
-                     title = "Размер шрифта",
-                     badge = {
-                        Badge(
-                           text = fontSize.value.toString() + "px",
-                           background = colorBackground,
-                           color = colorText
-                        )
-                     },
-                     onClick = {},
-                     onMinus = { fontSize.value -= 1 },
-                     onPlus = { fontSize.value += 1 },
-                     background = colorBackground,
-                     color = MaterialTheme.colorScheme.onPrimaryContainer,
-                  )
-                  FieldWithMinusPlus(
-                     title = "Интервал строк",
-                     badge = {
-                        Badge(
-                           text = lineHeight.value.toString() + "px",
-                           background = colorBackground,
-                           color = colorText
-                        )
-                     },
-                     onClick = {},
-                     onMinus = { lineHeight.value -= 1 },
-                     onPlus = { lineHeight.value += 1 },
-                     background = colorBackground,
-                     color = MaterialTheme.colorScheme.onPrimaryContainer,
-                  )
                }
             }
          }

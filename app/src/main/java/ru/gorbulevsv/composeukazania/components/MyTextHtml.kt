@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -39,6 +40,8 @@ import io.ktor.http.contentType
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.launch
 import ru.gorbulevsv.composeukazania.models.Ukazania
+import ru.gorbulevsv.composeukazania.ui.theme.MyFont
+import ru.gorbulevsv.composeukazania.ui.theme.fonts
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -49,6 +52,7 @@ const val MESSAGE: String = "<b>ПОКА НИЧЕГО НЕТ</b><div>На дан
 @Composable
 fun MyTextHtml(
    date: LocalDate,
+   fontFamily: MutableState<MyFont> = mutableStateOf(fonts[0]),
    fontSize: MutableState<Int> = mutableStateOf(19),
    lineHeight: MutableState<Int> = mutableStateOf(26)) {
    var html by remember { mutableStateOf("") }
@@ -81,7 +85,9 @@ fun MyTextHtml(
          style = TextStyle(
             fontSize = fontSize.value.sp,
             lineHeight = lineHeight.value.sp,
-            fontFamily = FontFamily.Serif,
+            fontFamily = FontFamily(
+               Font(fontFamily.value.r, FontWeight.Normal)
+            ),
             color = if (isSystemInDarkTheme()) Color("#e4e0dc".toColorInt()) else Color.Black,
             textAlign = if (html == MESSAGE) TextAlign.Center else TextAlign.Start
          ),
