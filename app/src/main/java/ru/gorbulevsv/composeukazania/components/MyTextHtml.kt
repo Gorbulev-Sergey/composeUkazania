@@ -67,7 +67,7 @@ fun MyTextHtml(
    ) {
       HtmlText(
          text = if (html == MESSAGE) MESSAGE else html,
-         modifier = Modifier.padding(15.dp),
+         modifier = Modifier.padding(top = 5.dp, bottom = 15.dp, start = 15.dp, end = 15.dp),
          fontSize = fontSize,
          style = TextStyle(
             fontSize = fontSize,
