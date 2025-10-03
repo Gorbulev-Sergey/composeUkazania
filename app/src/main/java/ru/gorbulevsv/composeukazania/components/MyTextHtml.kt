@@ -54,7 +54,8 @@ fun MyTextHtml(
    date: LocalDate,
    fontFamily: MutableState<MyFont> = mutableStateOf(fonts[0]),
    fontSize: MutableState<Int> = mutableStateOf(19),
-   lineHeight: MutableState<Int> = mutableStateOf(26)) {
+   lineHeight: MutableState<Int> = mutableStateOf(26),
+   padding: MutableState<Int> = mutableStateOf(14)) {
    var html by remember { mutableStateOf("") }
    val coroutineScope = rememberCoroutineScope()
    val scrollableState = rememberScrollState()
@@ -79,7 +80,7 @@ fun MyTextHtml(
          modifier = Modifier
             .background(if (isSystemInDarkTheme()) Color("#252525".toColorInt()) else Color.White)
             .padding(
-               15.dp, 13.dp
+               padding.value.dp, padding.value.dp - 2.dp
             ),
          fontSize = fontSize.value.sp,
          style = TextStyle(

@@ -99,16 +99,16 @@ class MainActivity : ComponentActivity() {
    var isFontDialogShow = mutableStateOf(false)
 
    var t = FontFamily.Serif
-   var font = mutableStateOf(fonts[7])
+   var font = mutableStateOf(fonts[8])
    var fontSize = mutableStateOf(20)
    var lineHeight = mutableStateOf(25)
+   var padding = mutableStateOf(14)
 
 
    val pageCount = Int.MAX_VALUE - 1
    val centralPage = ceil((pageCount / 2).toDouble()).toInt()
 
    val borderRadius = 5.dp
-   val padding = 14.dp
 
    val colorTopBottomAppBar = Color33
    val colorButton = Color36.copy(.4f)
@@ -237,7 +237,7 @@ class MainActivity : ComponentActivity() {
                            WindowInsets.systemBars.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom).asPaddingValues()
                         )
                         .fillMaxWidth()
-                        .padding(horizontal = padding, vertical = 9.dp)
+                        .padding(horizontal = 14.dp, vertical = 9.dp)
                   ) {
                      MyButton(
                         text = "Назад",
@@ -341,7 +341,8 @@ class MainActivity : ComponentActivity() {
                                  date = date.value.plusDays((pageIndex - centralPage).toLong()),
                                  fontFamily = font,
                                  fontSize = fontSize,
-                                 lineHeight = lineHeight
+                                 lineHeight = lineHeight,
+                                 padding=padding
                               )
                            }
                         }
@@ -400,7 +401,7 @@ class MainActivity : ComponentActivity() {
                }
 
                BottomSheet("Настройки:", isSettingsShow) {
-                  Column(modifier = Modifier.background(Color("#101526".toColorInt()))) {
+                  Column {
 
                      FieldWithNext(
                         title = "Шрифт",
@@ -484,12 +485,27 @@ class MainActivity : ComponentActivity() {
                         background = colorBackground,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                      )
+                     FieldWithMinusPlus(
+                        title = "Размер полей",
+                        badge = {
+                           Badge(
+                              text = padding.value.toString() + "px",
+                              background = colorBackground,
+                              color = colorText
+                           )
+                        },
+                        onClick = {},
+                        onMinus = { padding.value -= 1 },
+                        onPlus = { padding.value += 1 },
+                        background = colorBackground,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                     )
                   }
 
                   Row(
                      modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 38.dp),
+                        .padding(top = 60.dp),
                      horizontalArrangement = Arrangement.Center
                   ) {
                      val uriHandler = LocalUriHandler.current
@@ -498,7 +514,7 @@ class MainActivity : ComponentActivity() {
                            uriHandler.openUri("https://tips.tips/000459880")
                         }, colors = ButtonDefaults.buttonColors(
                            containerColor = colorBackground, contentColor = colorText
-                        ), shape = RoundedCornerShape(5.dp)
+                        ), shape = MaterialTheme.shapes.small
                      ) {
                         Text(
                            "Поддержать разработчика",
