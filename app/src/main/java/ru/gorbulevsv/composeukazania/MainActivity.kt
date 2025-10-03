@@ -40,6 +40,7 @@ import androidx.compose.material.icons.filled.SettingsBackupRestore
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -434,7 +435,16 @@ class MainActivity : ComponentActivity() {
                      }
                   },
                                   onDismiss = { isDateDialogShow = false },
-                                  date = date.value.plusDays((pagerState.currentPage - centralPage).toLong())
+                                  date = date.value.plusDays((pagerState.currentPage - centralPage).toLong()),
+                                  colors = DatePickerDefaults.colors(
+                                     selectedYearContainerColor = accentColor,
+                                     selectedYearContentColor = colorText,
+                                     currentYearContentColor = colorText,
+                                     selectedDayContainerColor = accentColor,
+                                     selectedDayContentColor = colorText,
+                                     todayDateBorderColor = accentColor,
+                                     todayContentColor = colorText
+                                  )
                   )
                }
 
@@ -451,7 +461,6 @@ class MainActivity : ComponentActivity() {
                   }
                }, isSettingsShow) {
                   Column {
-
                      FieldWithNext(
                         title = "Шрифт",
                         badge = {
