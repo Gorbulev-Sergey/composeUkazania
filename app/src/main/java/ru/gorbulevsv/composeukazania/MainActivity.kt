@@ -96,7 +96,7 @@ class MainActivity : ComponentActivity() {
    var isDateDialogShow by mutableStateOf(false)
    var isSettingsShow = mutableStateOf(false)
    var isFontDialogShow = mutableStateOf(false)
-   var isBottomPanelShow = mutableStateOf(true)
+   var isBottomPanelShow = mutableStateOf(false)
 
    var t = FontFamily.Serif
    var font = mutableStateOf(fonts[8])
@@ -448,7 +448,7 @@ class MainActivity : ComponentActivity() {
                      fontSize.value = 20
                      lineHeight.value = 25
                      padding.value = 14
-                     isBottomPanelShow.value = true
+                     isBottomPanelShow.value = false
                   }) {
                      Icon(Icons.Default.SettingsBackupRestore, "Сбросить настройки")
                   }

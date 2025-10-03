@@ -60,4 +60,8 @@ dependencies {
     implementation("io.ktor:ktor-client-serialization:$ktor_v")
     implementation("com.google.code.gson:gson:2.13.2")
     implementation("com.github.SignificoHealth:compose-html:1.0.3")
+
+    implementation("androidx.datastore:datastore-preferences:1.1.7")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 }
