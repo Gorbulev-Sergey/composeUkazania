@@ -36,6 +36,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.SettingsBackupRestore
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -71,6 +72,7 @@ import kotlinx.coroutines.launch
 import ru.gorbulevsv.composeukazania.components.Badge
 import ru.gorbulevsv.composeukazania.components.BottomCalendar
 import ru.gorbulevsv.composeukazania.components.BottomSheet
+import ru.gorbulevsv.composeukazania.components.BottomSheetSecond
 import ru.gorbulevsv.composeukazania.components.DatePickerModal
 import ru.gorbulevsv.composeukazania.components.Dialog
 import ru.gorbulevsv.composeukazania.components.FieldWithMinusPlus
@@ -342,7 +344,7 @@ class MainActivity : ComponentActivity() {
                                  fontFamily = font,
                                  fontSize = fontSize,
                                  lineHeight = lineHeight,
-                                 padding=padding
+                                 padding = padding
                               )
                            }
                         }
@@ -400,7 +402,12 @@ class MainActivity : ComponentActivity() {
                   )
                }
 
-               BottomSheet("Настройки:", isSettingsShow) {
+               BottomSheetSecond(
+                  "Настройки:", {
+                  IconButton(onClick = {}) {
+                     Icon(Icons.Default.SettingsBackupRestore, "Сбросить настройки")
+                  }
+               }, isSettingsShow) {
                   Column {
 
                      FieldWithNext(
