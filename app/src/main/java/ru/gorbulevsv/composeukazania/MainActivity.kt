@@ -50,6 +50,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -57,6 +58,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -65,6 +67,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.gorbulevsv.composeukazania.components.Badge
 import ru.gorbulevsv.composeukazania.components.BottomSheetSecond
@@ -146,6 +153,9 @@ class MainActivity : ComponentActivity() {
 
       enableEdgeToEdge()
       setContent {
+         val storage = Storage(LocalContext.current)
+         val scope = rememberCoroutineScope()
+
          ComposeUkazaniaTheme {
             var date = mutableStateOf(LocalDate.now())
             val pullToRefreshState = rememberPullToRefreshState()
@@ -158,6 +168,11 @@ class MainActivity : ComponentActivity() {
                "#E6D9C9".toColorInt()
             )
             val colorText = if (isSystemInDarkTheme()) Color("#252525".toColorInt()) else MaterialTheme.colorScheme.onBackground
+
+            LifecycleEventEffect(Lifecycle.Event.ON_START) {
+               loadFromDataStore(storage)
+            }
+
             Scaffold(topBar = {
                CenterAlignedTopAppBar(
                   navigationIcon = {
@@ -337,6 +352,33 @@ class MainActivity : ComponentActivity() {
                }
 
             }) { it ->
+               LaunchedEffect(font.value) {
+                  scope.launch(Dispatchers.IO) {
+                     storage.fontSet(font.value.title)
+                  }
+               }
+               LaunchedEffect(fontSize.value) {
+                  scope.launch(Dispatchers.IO) {
+                     storage.fontSizeSet(fontSize.value)
+                  }
+               }
+               LaunchedEffect(lineHeight.value) {
+                  scope.launch(Dispatchers.IO) {
+                     storage.lineHeightSet(lineHeight.value)
+                  }
+               }
+               LaunchedEffect(padding.value) {
+                  scope.launch(Dispatchers.IO) {
+                     storage.paddingSet(padding.value)
+                  }
+               }
+               LaunchedEffect(isBottomPanelShow.value) {
+                  scope.launch(Dispatchers.IO) {
+                     storage.isBottomPanelShowSet(isBottomPanelShow.value)
+                  }
+               }
+
+
                Column(
                   modifier = Modifier
                      .fillMaxSize()
@@ -581,6 +623,35 @@ class MainActivity : ComponentActivity() {
                   }
                }
             }
+         }
+      }
+   }
+
+   @OptIn(DelicateCoroutinesApi::class)
+   fun loadFromDataStore(storage: Storage) {
+      lifecycleScope.launch(Dispatchers.IO) {
+         storage.fontGet.collect {
+            font.value = fonts.first { f -> f.title == it }
+         }
+      }
+      lifecycleScope.launch(Dispatchers.IO) {
+         storage.fontSizeGet.collect {
+            fontSize.value = it
+         }
+      }
+      lifecycleScope.launch(Dispatchers.IO) {
+         storage.lineHeightGet.collect {
+            lineHeight.value = it
+         }
+      }
+      lifecycleScope.launch(Dispatchers.IO) {
+         storage.paddingGet.collect {
+            padding.value = it
+         }
+      }
+      lifecycleScope.launch(Dispatchers.IO) {
+         storage.isBottomPanelShowGet.collect {
+            isBottomPanelShow.value = it
          }
       }
    }
