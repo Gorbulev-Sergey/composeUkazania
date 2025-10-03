@@ -234,10 +234,7 @@ class MainActivity : ComponentActivity() {
             }, bottomBar = {
                if (isInternetConnected && isBottomPanelShow.value) {
                   Row(
-                     horizontalArrangement = Arrangement.spacedBy(
-                        8.dp,
-                        alignment = Alignment.CenterHorizontally
-                     ),
+                     horizontalArrangement = Arrangement.SpaceEvenly,
                      verticalAlignment = Alignment.CenterVertically,
                      modifier = Modifier
                         .background(colorBackground)
