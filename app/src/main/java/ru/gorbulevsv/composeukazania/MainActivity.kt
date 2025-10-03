@@ -116,9 +116,6 @@ class MainActivity : ComponentActivity() {
 
    val borderRadius = 5.dp
 
-   val colorTopBottomAppBar = Color33
-   val colorButton = Color36.copy(.4f)
-   val colorButtonText = Color22
    val colorDark = Color21
    val colorLight = Color22
 
@@ -222,7 +219,7 @@ class MainActivity : ComponentActivity() {
                   }
                }, actions = {
                   IconButton(onClick = { isSettingsShow.value = true }) {
-                     Icon(Icons.Default.Settings, "")
+                     Icon(Icons.Default.Settings, "Настройки")
                   }
                }, colors = TopAppBarDefaults.topAppBarColors(
                   containerColor = colorBackground,
@@ -292,7 +289,6 @@ class MainActivity : ComponentActivity() {
                               modifier = Modifier.padding(start = 4.dp)
                            )
                         }
-
                      }
                      MyButton(
                         text = "Вперёд",
@@ -347,7 +343,6 @@ class MainActivity : ComponentActivity() {
                }
 
             }) { it ->
-
                Column(
                   modifier = Modifier
                      .fillMaxSize()
@@ -561,7 +556,6 @@ class MainActivity : ComponentActivity() {
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                      )
                   }
-
                   Row(
                      modifier = Modifier
                         .fillMaxWidth()
