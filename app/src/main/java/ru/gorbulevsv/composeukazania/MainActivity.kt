@@ -98,8 +98,8 @@ class MainActivity : ComponentActivity() {
    var isSettingsShow = mutableStateOf(false)
    var isFontDialogShow = mutableStateOf(false)
 
-
-   var font = mutableStateOf(fonts[8])
+   var t = FontFamily.Serif
+   var font = mutableStateOf(fonts[7])
    var fontSize = mutableStateOf(20)
    var lineHeight = mutableStateOf(25)
 
@@ -400,6 +400,7 @@ class MainActivity : ComponentActivity() {
                }
 
                BottomSheet("Настройки:", isSettingsShow) {
+                  Column(modifier = Modifier.background(Color("#101526".toColorInt()))) {
 
                      FieldWithNext(
                         title = "Шрифт",
@@ -483,6 +484,7 @@ class MainActivity : ComponentActivity() {
                         background = colorBackground,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                      )
+                  }
 
                   Row(
                      modifier = Modifier
