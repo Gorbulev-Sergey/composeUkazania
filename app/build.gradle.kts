@@ -51,6 +51,8 @@ dependencies {
     implementation(libs.material.icons.extended)
 
     implementation("androidx.compose.material3:material3:1.4.0")
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.compose.ui)
 
     val ktor_v = "3.3.0"
     implementation("io.ktor:ktor-client-core:$ktor_v")

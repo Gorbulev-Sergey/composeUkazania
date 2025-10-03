@@ -83,8 +83,6 @@ import ru.gorbulevsv.composeukazania.components.FieldWithNext
 import ru.gorbulevsv.composeukazania.components.MyButton
 import ru.gorbulevsv.composeukazania.components.MyTextHtml
 import ru.gorbulevsv.composeukazania.ui.theme.Color21
-import ru.gorbulevsv.composeukazania.ui.theme.Color22
-import ru.gorbulevsv.composeukazania.ui.theme.Color36
 import ru.gorbulevsv.composeukazania.ui.theme.ColorInfo
 import ru.gorbulevsv.composeukazania.ui.theme.ComposeUkazaniaTheme
 import ru.gorbulevsv.composeukazania.ui.theme.fonts
@@ -118,7 +116,6 @@ class MainActivity : ComponentActivity() {
    val borderRadius = 5.dp
 
    val colorDark = Color21
-   val colorLight = Color22
 
    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
    @OptIn(ExperimentalMaterial3Api::class)
@@ -157,7 +154,7 @@ class MainActivity : ComponentActivity() {
          val scope = rememberCoroutineScope()
 
          ComposeUkazaniaTheme {
-            var date = mutableStateOf(LocalDate.now())
+            val date = mutableStateOf(LocalDate.now())
             val pullToRefreshState = rememberPullToRefreshState()
             val coroutineScope = rememberCoroutineScope()
             val pagerState = rememberPagerState(
@@ -400,8 +397,8 @@ class MainActivity : ComponentActivity() {
                         Indicator(
                            modifier = Modifier.align(Alignment.TopCenter),
                            isRefreshing = isRefreshing,
-                           containerColor = Color36,
-                           color = colorLight,
+                           containerColor = colorBackground,
+                           color = colorText,
                            state = pullToRefreshState
                         )
                      },
@@ -462,7 +459,7 @@ class MainActivity : ComponentActivity() {
                      if (v != null) {
                         coroutineScope.launch {
                            val d = LocalDate.parse(
-                              dateFromLong(v.toLong()),
+                              dateFromLong(v),
                               DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
                            )
                            pagerState.animateScrollToPage((centralPage + d.toEpochDay() - date.value.toEpochDay()).toInt())
