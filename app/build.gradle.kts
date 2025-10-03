@@ -6,14 +6,14 @@ plugins {
 
 android {
     namespace = "ru.gorbulevsv.composeukazania"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "ru.gorbulevsv.androidukazaniaseptember"
         minSdk = 27
-        targetSdk = 35
-        versionCode = 5
-        versionName = "2.1"
+        targetSdk = 36
+        versionCode = 6
+        versionName = "2.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -40,7 +40,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -49,24 +48,22 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.material.icons.extended)
 
-    implementation("androidx.compose.material3:material3:1.3.1")
+    implementation("androidx.compose.material3:material3:1.4.0")
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.compose.ui)
 
-    val ktor_v = "3.1.0"
+    val ktor_v = "3.3.0"
     implementation("io.ktor:ktor-client-core:$ktor_v")
     implementation("io.ktor:ktor-client-cio:$ktor_v")
     implementation("io.ktor:ktor-client-json:$ktor_v")
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_v")
     implementation("io.ktor:ktor-client-serialization:$ktor_v")
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.code.gson:gson:2.13.2")
     implementation("com.github.SignificoHealth:compose-html:1.0.3")
 
-
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    implementation("androidx.datastore:datastore-preferences:1.1.7")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 }
