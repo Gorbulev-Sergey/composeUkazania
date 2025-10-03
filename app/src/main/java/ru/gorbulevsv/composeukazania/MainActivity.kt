@@ -75,6 +75,7 @@ import ru.gorbulevsv.composeukazania.components.BottomSheet
 import ru.gorbulevsv.composeukazania.components.BottomSheetSecond
 import ru.gorbulevsv.composeukazania.components.DatePickerModal
 import ru.gorbulevsv.composeukazania.components.Dialog
+import ru.gorbulevsv.composeukazania.components.FieldCheckBox
 import ru.gorbulevsv.composeukazania.components.FieldWithMinusPlus
 import ru.gorbulevsv.composeukazania.components.FieldWithNext
 import ru.gorbulevsv.composeukazania.components.MyButton
@@ -507,12 +508,19 @@ class MainActivity : ComponentActivity() {
                         background = colorBackground,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                      )
+                     FieldCheckBox(
+                        title = "Нижняя панель",
+                        badge = {  },
+                        onClick = {  },
+                        background = colorBackground,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                     )
                   }
 
                   Row(
                      modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 60.dp),
+                        .padding(top = 15.dp),
                      horizontalArrangement = Arrangement.Center
                   ) {
                      val uriHandler = LocalUriHandler.current
