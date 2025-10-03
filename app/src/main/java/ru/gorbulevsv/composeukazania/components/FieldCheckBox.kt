@@ -54,7 +54,7 @@ fun FieldCheckBox(
    dialog: @Composable () -> Unit = {},
    background: Color = MaterialTheme.colorScheme.background,
    color: Color = MaterialTheme.colorScheme.onPrimary,
-   padding: PaddingValues = PaddingValues(9.dp),
+   padding: PaddingValues = PaddingValues(start = 9.dp, end = 16.dp, top = 9.dp, bottom = 9.dp),
    radius: Dp = 5.dp,
    modifier: Modifier = Modifier) {
    Row(
