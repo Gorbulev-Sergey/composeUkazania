@@ -16,17 +16,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
@@ -71,8 +67,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import kotlinx.coroutines.launch
 import ru.gorbulevsv.composeukazania.components.Badge
-import ru.gorbulevsv.composeukazania.components.BottomCalendar
-import ru.gorbulevsv.composeukazania.components.BottomSheet
 import ru.gorbulevsv.composeukazania.components.BottomSheetSecond
 import ru.gorbulevsv.composeukazania.components.DatePickerModal
 import ru.gorbulevsv.composeukazania.components.Dialog
@@ -83,7 +77,6 @@ import ru.gorbulevsv.composeukazania.components.MyButton
 import ru.gorbulevsv.composeukazania.components.MyTextHtml
 import ru.gorbulevsv.composeukazania.ui.theme.Color21
 import ru.gorbulevsv.composeukazania.ui.theme.Color22
-import ru.gorbulevsv.composeukazania.ui.theme.Color33
 import ru.gorbulevsv.composeukazania.ui.theme.Color36
 import ru.gorbulevsv.composeukazania.ui.theme.ColorInfo
 import ru.gorbulevsv.composeukazania.ui.theme.ComposeUkazaniaTheme
