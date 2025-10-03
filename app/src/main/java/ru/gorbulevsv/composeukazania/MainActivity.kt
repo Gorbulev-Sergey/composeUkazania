@@ -100,6 +100,7 @@ class MainActivity : ComponentActivity() {
    var isDateDialogShow by mutableStateOf(false)
    var isSettingsShow = mutableStateOf(false)
    var isFontDialogShow = mutableStateOf(false)
+   var isBottomPanelShow = mutableStateOf(true)
 
    var t = FontFamily.Serif
    var font = mutableStateOf(fonts[8])
@@ -405,7 +406,13 @@ class MainActivity : ComponentActivity() {
 
                BottomSheetSecond(
                   "Настройки:", {
-                  IconButton(onClick = {}) {
+                  IconButton(onClick = {
+                     font.value = fonts[8]
+                     fontSize.value = 20
+                     lineHeight.value = 25
+                     padding.value = 14
+                     isBottomPanelShow.value = true
+                  }) {
                      Icon(Icons.Default.SettingsBackupRestore, "Сбросить настройки")
                   }
                }, isSettingsShow) {
@@ -510,8 +517,7 @@ class MainActivity : ComponentActivity() {
                      )
                      FieldCheckBox(
                         title = "Нижняя панель",
-                        badge = {  },
-                        onClick = {  },
+                        isChecked = isBottomPanelShow,
                         background = colorBackground,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                      )
@@ -520,7 +526,7 @@ class MainActivity : ComponentActivity() {
                   Row(
                      modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 15.dp),
+                        .padding(top = 12.dp),
                      horizontalArrangement = Arrangement.Center
                   ) {
                      val uriHandler = LocalUriHandler.current
