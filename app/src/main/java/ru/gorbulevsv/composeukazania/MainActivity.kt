@@ -94,6 +94,8 @@ import java.util.Date
 import kotlin.math.ceil
 
 class MainActivity : ComponentActivity() {
+   val accentColor = Color("#D6C1A6".toColorInt())
+
    var isInternetConnected by mutableStateOf(false)
    var isRefreshing by mutableStateOf(true)
    var isNewStyle by mutableStateOf(true)
@@ -172,7 +174,7 @@ class MainActivity : ComponentActivity() {
                      onClick = { isNewStyle = !isNewStyle },
                      modifier = Modifier.padding(start = 4.dp),
                      colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = Color("#D6C1A6".toColorInt())
+                        containerColor = accentColor
                      )
                   ) {
                      Text(
@@ -230,22 +232,24 @@ class MainActivity : ComponentActivity() {
                )
                )
             }, bottomBar = {
-               val hide = true
-               if (isInternetConnected && !hide) {
+               if (isInternetConnected && isBottomPanelShow.value) {
                   Row(
-                     horizontalArrangement = Arrangement.SpaceBetween,
+                     horizontalArrangement = Arrangement.spacedBy(
+                        8.dp,
+                        alignment = Alignment.CenterHorizontally
+                     ),
                      verticalAlignment = Alignment.CenterVertically,
                      modifier = Modifier
-                        .background(colorTopBottomAppBar)
+                        .background(colorBackground)
                         .padding(
                            WindowInsets.systemBars.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom).asPaddingValues()
                         )
                         .fillMaxWidth()
-                        .padding(horizontal = 14.dp, vertical = 9.dp)
+                        .padding(horizontal = 8.dp, vertical = 8.dp)
                   ) {
                      MyButton(
                         text = "Назад",
-                        color = colorButtonText,
+                        color = colorText,
                         background = Color.Transparent,
                         shape = RoundedCornerShape(borderRadius),
                         fontSize = 16.sp,
@@ -254,18 +258,48 @@ class MainActivity : ComponentActivity() {
                               pagerState.animateScrollToPage(pagerState.currentPage - 1)
                            }
                         })
-                     BottomCalendar(
-                        date = date.value.plusDays((pagerState.currentPage - centralPage).toLong()),
+                     FloatingActionButton(
                         onClick = { isDateDialogShow = true },
-                        fontSize = (fontSize.value * .8).sp,
-                        color = colorLight,
-                        background = colorButton,
-                        borderRadius = borderRadius,
-                        padding = PaddingValues(horizontal = 11.dp, vertical = 9.dp)
-                     )
+                        shape = MaterialTheme.shapes.small,
+                        elevation = FloatingActionButtonDefaults.elevation(
+                           defaultElevation = 0.dp, pressedElevation = 0.dp
+                        ),
+                        containerColor = accentColor,
+                        contentColor = MaterialTheme.colorScheme.onBackground,
+
+                        ) {
+                        Row(
+                           modifier = Modifier.padding(8.dp, 0.dp),
+                           verticalAlignment = Alignment.CenterVertically
+                        ) {
+                           Icon(
+                              Icons.Default.DateRange,
+                              contentDescription = "",
+                              tint = colorText
+                           )
+                           Text(
+                              text = if (isNewStyle) {
+                                 DateTimeFormatter.ofPattern("d MMMM\nн.ст.").format(
+                                    date.value.plusDays(
+                                       (pagerState.currentPage - centralPage).toLong()
+                                    )
+                                 )
+                              } else {
+                                 DateTimeFormatter.ofPattern(
+                                    "d MMMM\nст.ст."
+                                 ).format(date.value.plusDays((pagerState.currentPage - centralPage).toLong() - 13))
+                              },
+                              textAlign = TextAlign.Center,
+                              lineHeight = 14.sp,
+                              color = colorText,
+                              modifier = Modifier.padding(start = 4.dp)
+                           )
+                        }
+
+                     }
                      MyButton(
                         text = "Вперёд",
-                        color = colorButtonText,
+                        color = colorText,
                         background = Color.Transparent,
                         shape = RoundedCornerShape(borderRadius),
                         fontSize = 16.sp,
@@ -277,36 +311,44 @@ class MainActivity : ComponentActivity() {
                   }
                }
             }, floatingActionButton = {
-               FloatingActionButton(
-                  onClick = { isDateDialogShow = true },
-                  shape = MaterialTheme.shapes.small,
-                  elevation = FloatingActionButtonDefaults.elevation(
-                     defaultElevation = 0.dp, pressedElevation = 0.dp
-                  ),
-                  containerColor = colorBackground,
-                  contentColor = MaterialTheme.colorScheme.onBackground,
-                  modifier = Modifier.padding(bottom = 8.dp)
-               ) {
-                  Column(
-                     horizontalAlignment = Alignment.CenterHorizontally,
-                     modifier = Modifier.padding(8.dp, 6.dp)
+               if (isInternetConnected && !isBottomPanelShow.value) {
+                  FloatingActionButton(
+                     onClick = { isDateDialogShow = true },
+                     shape = MaterialTheme.shapes.small,
+                     elevation = FloatingActionButtonDefaults.elevation(
+                        defaultElevation = 0.dp, pressedElevation = 0.dp
+                     ),
+                     containerColor = colorBackground,
+                     contentColor = MaterialTheme.colorScheme.onBackground,
+                     modifier = Modifier.padding(bottom = 8.dp)
                   ) {
-                     Icon(Icons.Default.DateRange, contentDescription = "", tint = colorText)
-                     Text(
-                        text = if (isNewStyle) {
-                           DateTimeFormatter.ofPattern("d MMMM\nн.ст.").format(
-                              date.value.plusDays(
-                                 (pagerState.currentPage - centralPage).toLong()
+                     Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(8.dp, 6.dp)
+                     ) {
+                        Icon(
+                           Icons.Default.DateRange, contentDescription = "", tint = colorText
+                        )
+                        Text(
+                           text = if (isNewStyle) {
+                              DateTimeFormatter.ofPattern("d MMMM\nн.ст.").format(
+                                 date.value.plusDays(
+                                    (pagerState.currentPage - centralPage).toLong()
+                                 )
                               )
-                           )
-                        } else {
-                           DateTimeFormatter.ofPattern(
-                              "d MMMM\nст.ст."
-                           ).format(date.value.plusDays((pagerState.currentPage - centralPage).toLong() - 13))
-                        }, textAlign = TextAlign.Center, lineHeight = 14.sp, color = colorText
-                     )
+                           } else {
+                              DateTimeFormatter.ofPattern(
+                                 "d MMMM\nст.ст."
+                              ).format(date.value.plusDays((pagerState.currentPage - centralPage).toLong() - 13))
+                           },
+                           textAlign = TextAlign.Center,
+                           lineHeight = 14.sp,
+                           color = colorText
+                        )
+                     }
                   }
                }
+
             }) { it ->
 
                Column(

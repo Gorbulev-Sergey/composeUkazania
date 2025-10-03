@@ -47,14 +47,6 @@ fun BottomCalendar(
             fontFamily = FontFamily.Default,
             fontWeight = FontWeight.Bold
         )
-//        Text(
-//            text = DateTimeFormatter.ofPattern("MMMM").format(date),
-//            fontSize = fontSize,
-//            color = color,
-//            textAlign = TextAlign.Center,
-//            fontFamily = FontFamily.Default
-//        )
-
     }
 
 }
