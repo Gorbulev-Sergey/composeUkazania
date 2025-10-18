@@ -37,6 +37,7 @@ fun BottomSheetSecond(
    val sheetState = rememberModalBottomSheetState()
    if (isShow.value) {
       ModalBottomSheet(
+         containerColor = MaterialTheme.colorScheme.surface,
          shape = MaterialTheme.shapes.medium,
          onDismissRequest = { isShow.value = false },
          sheetState = sheetState

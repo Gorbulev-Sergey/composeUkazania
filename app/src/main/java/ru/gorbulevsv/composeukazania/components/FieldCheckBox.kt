@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckBox
-import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -71,10 +73,14 @@ fun FieldCheckBox(
                      { isChecked.value = !isChecked.value; onClick(isChecked.value) })
             ) {
                if (isChecked.value) {
-                  Icon(Icons.Default.CheckBox, "")
+                  Icon(
+                     Icons.Default.Check, ""
+                  )
                } else {
                   Icon(
-                     Icons.Default.CheckBoxOutlineBlank, ""
+                     imageVector = Icons.Default.Check,
+                     contentDescription = "",
+                     tint = color.copy(.1f)
                   )
                }
             }

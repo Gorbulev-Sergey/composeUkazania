@@ -50,7 +50,7 @@ dependencies {
    implementation(libs.androidx.compose.runtime)
    implementation(libs.androidx.compose.ui)
 
-   implementation(libs.material.icons.extended)
+   implementation(libs.material.icons.core)
 
    implementation(libs.ktor.client.core)
    implementation(libs.ktor.client.cio)

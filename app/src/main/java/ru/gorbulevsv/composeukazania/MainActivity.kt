@@ -31,8 +31,8 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.SettingsBackupRestore
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -57,6 +57,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -214,12 +216,15 @@ class MainActivity : ComponentActivity() {
                               ).format(date.value.plusDays((pagerState.currentPage - centralPage).toLong() - 13))
                            },
                            style = MaterialTheme.typography.bodyLarge,
-                           modifier = Modifier.clickable(
-                              onClick = {
-                                 coroutineScope.launch {
-                                    pagerState.animateScrollToPage(centralPage)
-                                 }
-                              })
+                           modifier = Modifier
+                              .clip(RoundedCornerShape(4.dp))
+                              .clickable(
+                                 onClick = {
+                                    coroutineScope.launch {
+                                       pagerState.animateScrollToPage(centralPage)
+                                    }
+                                 })
+                              .padding(horizontal = 2.dp)
                         )
                      }
                   }
@@ -466,16 +471,17 @@ class MainActivity : ComponentActivity() {
                         }
                      }
                   },
-                                  onDismiss = { isDateDialogShow = false },
-                                  date = date.value.plusDays((pagerState.currentPage - centralPage).toLong()),
-                                  colors = DatePickerDefaults.colors(
+                     onDismiss = { isDateDialogShow = false },
+                     date = date.value.plusDays((pagerState.currentPage - centralPage).toLong()),
+                     colors = DatePickerDefaults.colors(
                                      selectedYearContainerColor = accentColor,
                                      selectedYearContentColor = colorText,
                                      currentYearContentColor = colorText,
                                      selectedDayContainerColor = accentColor,
                                      selectedDayContentColor = colorText,
                                      todayDateBorderColor = accentColor,
-                                     todayContentColor = colorText
+                                     todayContentColor = colorText,
+                                     containerColor = MaterialTheme.colorScheme.surface,
                                   )
                   )
                }
@@ -489,7 +495,11 @@ class MainActivity : ComponentActivity() {
                      padding.value = 14
                      isBottomPanelShow.value = false
                   }) {
-                     Icon(Icons.Default.SettingsBackupRestore, "Сбросить настройки")
+                     Icon(
+                        Icons.Default.Refresh,
+                        "Сбросить настройки",
+                        Modifier.scale(scaleX = -1f, scaleY = 1f)
+                     )
                   }
                }, isSettingsShow) {
                   Column {

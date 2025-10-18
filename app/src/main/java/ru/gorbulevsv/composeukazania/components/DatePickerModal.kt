@@ -37,6 +37,7 @@ fun DatePickerModal(
       ) * 1000
    )
    DatePickerDialog(
+      colors = DatePickerDefaults.colors(containerColor = colors.containerColor),
       shape = MaterialTheme.shapes.medium,
                     onDismissRequest = onDismiss,
                     confirmButton = {
